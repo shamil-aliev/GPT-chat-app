@@ -1,0 +1,15 @@
+.logout {
+  border: none;
+  background: none;
+  color: inherit;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+@media (max-width: 374px) {
+  .logout {
+    font-size: 16px;
+  }
+}

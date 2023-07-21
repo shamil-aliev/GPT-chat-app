@@ -1,0 +1,45 @@
+.date {
+  color: #aaa;
+}
+
+.info {
+  color: #0085ff;
+  font-size: 16px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+.answer {
+  margin-bottom: 12px;
+  line-height: 1.45;
+}
+.delete-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #f00;
+}
+
+@media (max-width: 375px) {
+  .answer {
+    font-size: 14px;
+  }
+  .info {
+    margin-bottom: 8px;
+  }
+}
+
+@media (min-width: 900px) {
+  .answer {
+    font-size: 20px;
+  }
+  .info {
+    font-size: 20px;
+  }
+  .delete-btn {
+    font-size: 20px;
+  }
+  .date {
+    font-size: 20px;
+  }
+}
