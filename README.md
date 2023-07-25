@@ -19,3 +19,6 @@ Each user is able to see only his messages but not another users.
 1. Download source code locally or clone the repository
 2. Install all dependencies: 'npm i'
 3. Run the project: 'npm start'
+
+## Hosted at Netlify
+https://gptchat-app.netlify.app
