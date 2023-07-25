@@ -1,4 +1,11 @@
+import { useRef, useEffect } from "react";
 function Actions({ onHandleSearch, userInput, setUserInput }) {
+  const inputRef = useRef();
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
   return (
     <form
       onSubmit={onHandleSearch}
@@ -13,6 +20,7 @@ function Actions({ onHandleSearch, userInput, setUserInput }) {
         // backgroundColor: "tomato",
       }}>
       <input
+        ref={inputRef}
         type="text"
         placeholder="Type your message here..."
         value={userInput}

@@ -9,9 +9,11 @@ import Actions from "./components/Actions";
 import Spinner from "./components/Spinner";
 import Messages from "./components/Messages";
 import AuthForm from "./components/AuthForm";
-
-//test
+import Errors from "./components/Errors";
 import Logout from "./components/Logout";
+
+//styles
+import styles from "./styles/App.module.css";
 
 const keyGPT = process.env.REACT_APP_GPT_KEY; //
 
@@ -27,6 +29,9 @@ const App = () => {
 
   //supabase states
   const [messages, setMessages] = useState([]); // Here is all data from db
+
+  //error state
+  const [error, setError] = useState("");
 
   const handleDelete = async (messageId) => {
     try {
@@ -74,6 +79,12 @@ const App = () => {
           }),
         }
       );
+      // Errors handling while fetching
+      console.log(response);
+      if (!response.ok) {
+        setError("⛔️ Error while fetching data. Please try again");
+        setIsLoading(false);
+      }
       // Getting data back from GPT
       const data = await response.json();
       console.log(`Response from GPT: ${data}`);
@@ -108,8 +119,8 @@ const App = () => {
           console.log("Data inserted successfully");
         }
       }
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -158,12 +169,7 @@ const App = () => {
   }, [userId]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}>
+    <div className={styles.main}>
       <Header>
         {isLogged && (
           <Logout setIsLogged={setIsLogged} setUserInput={setUserInput} />
@@ -172,7 +178,8 @@ const App = () => {
       {isLogged ? (
         <>
           {isLoading && <Spinner />}
-          {messages && !isLoading && (
+          {error && <Errors err={error} />}
+          {messages && !error && !isLoading && (
             <Messages data={messages} onDelete={handleDelete} />
           )}
           {!messages && !isLoading && <Starter />}
