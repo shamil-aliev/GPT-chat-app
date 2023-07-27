@@ -12,6 +12,8 @@ function AuthForm({ setUserId, setIsLogged }) {
   const [loginError, setLoginError] = useState("");
   const [signupError, setSignupError] = useState("");
 
+  const [info, setInfo] = useState("");
+
   // TEST STATES
 
   // Here I get user's credentials for further use
@@ -38,13 +40,6 @@ function AuthForm({ setUserId, setIsLogged }) {
           email: loginEmail, // SB will check if entered values match the stored values in storage
           password: loginPassword,
         });
-
-      // const {
-      //   data: { user },
-      // } = await supabase.auth.getUser();
-      // console.log([user.email, user.id]); // user's email & id
-      // setUserId(user.id);
-      // console.log(`User ID: ${user.id}`);
 
       if (data.user) {
         console.log("Login successful:", data); // Here will be all the data about the user
@@ -79,18 +74,19 @@ function AuthForm({ setUserId, setIsLogged }) {
         email: signupEmail, // SB will store entered values as email and password and use it for further log in
         password: signupPassword,
       });
-      console.log("Signup successful:", data);
-
+      setInfo(
+        "Confirmation link was sent to your email. Please confirm your account"
+      );
       // CODE BELOW IS TO REMOVE. USEID STATE WILL RESET ON REFRESH. CHANCHE WITH LOCAL STORAGE
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      console.log([user.email, user.id]); // user's email & id
+      console.log([user?.email, user?.id]); // user's email & id
       setUserId(user.id);
       console.log(`User ID: ${user.id}`);
 
       console.log([data.user.email, data.user.id]); // user's email & id
-      setUserId(data.user.id); // WORK HERE
+      setUserId(data.user.id);
 
       // Don't remove handleLogin func!
       handleLogin();
@@ -98,9 +94,6 @@ function AuthForm({ setUserId, setIsLogged }) {
       if (error) {
         console.error("Signup error:", error.message);
         // TODO: Handle signup error (display error message, etc.)
-      } else {
-        // TODO: Handle successful signup (redirect to login page, display success message, etc.)
-        // TODO: Create and pass Logged state to App -- ! IMPORTANT
       }
     } catch (error) {
       console.error("Error:", error);
@@ -181,6 +174,11 @@ function AuthForm({ setUserId, setIsLogged }) {
           Sign Up
         </button>
       </form>
+      {info ? (
+        <p style={{ fontSize: "16px", marginTop: "12px", color: "#0085ff" }}>
+          {info}
+        </p>
+      ) : null}
     </div>
   );
 }

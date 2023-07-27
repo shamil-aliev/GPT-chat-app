@@ -33,26 +33,6 @@ const App = () => {
   //error state
   const [error, setError] = useState("");
 
-  const handleDelete = async (messageId) => {
-    try {
-      const { error } = await supabase
-        .from("messages")
-        .delete()
-        .eq("id", messageId);
-      if (error) {
-        throw new Error("Error deleting message:", error);
-      } else {
-        // If deletion is successful, update the messages state by filtering out the deleted message
-        setMessages((prevMessages) =>
-          prevMessages.filter((message) => message.id !== messageId)
-        );
-        console.log("Message deleted successfully");
-      }
-    } catch (catchError) {
-      console.error(catchError);
-    }
-  };
-
   const handleSearch = async (e) => {
     try {
       const apiKey = keyGPT;
@@ -103,7 +83,6 @@ const App = () => {
           answer: data.choices[0].message.content,
           user_id: userId,
         });
-        console.log(``);
         // UPDATING THE 'MESSAGES' STATE
 
         const newMessage = {
@@ -132,11 +111,28 @@ const App = () => {
     if (authData) {
       // If authentication data exists, set the user as logged in
       setIsLogged(true);
+
+      // NEW LINES
+      // Fetch messages logic of logged user
+      const fetchMessages = async () => {
+        if (userId) {
+          const { data, error } = await supabase
+            .from("messages")
+            .select("question, answer, answerTime, created_at, id")
+            .eq("user_id", userId);
+          setMessages(data || []);
+          if (error) {
+            console.error("Error fetching messages:", error);
+          }
+        }
+      };
+
+      fetchMessages();
     } else {
       // If no authentication data exists, set the user as logged out
       setIsLogged(false);
     }
-  }, [isLogged]);
+  }, [userId]); // was isLogged
 
   // #GPT version
   // store state in userId state
@@ -158,7 +154,6 @@ const App = () => {
           .select("question, answer, answerTime, created_at, id") //
           .eq("user_id", userId);
         setMessages(data);
-        console.log(data);
         if (error) {
           console.error("Error fetching messages:", error);
         }
@@ -177,12 +172,17 @@ const App = () => {
       </Header>
       {isLogged ? (
         <>
+          {/* <Starter /> */}
           {isLoading && <Spinner />}
           {error && <Errors err={error} />}
+          {Array.isArray(messages) &&
+            messages.length === 0 &&
+            !error &&
+            !isLoading && <Starter />}
           {messages && !error && !isLoading && (
-            <Messages data={messages} onDelete={handleDelete} />
+            <Messages data={messages} setMessages={setMessages} />
           )}
-          {!messages && !isLoading && <Starter />}
+          {/* // STARTER DOESN'T SHOW UP FIX IT */}
           <Actions
             onHandleSearch={handleSearch}
             userInput={userInput}
