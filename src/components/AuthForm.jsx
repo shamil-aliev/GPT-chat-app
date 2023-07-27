@@ -42,9 +42,8 @@ function AuthForm({ setUserId, setIsLogged }) {
         });
 
       if (data.user) {
-        console.log("Login successful:", data); // Here will be all the data about the user
+        // console.log("Login successful:", data); // Here will be all the data about the user
 
-        // Don't remove handleLogin func!
         handleLogin();
       }
 
